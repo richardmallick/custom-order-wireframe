@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom Order System — Wireframe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- View Switcher -->
+  <div class="view-switcher">
+    <button class="view-btn active" data-view="backend">⚙️ Backend (Admin)</button>
+    <button class="view-btn" data-view="frontend">🖥️ Frontend (Customer)</button>
+  </div>
+
+  <!-- ==================== BACKEND VIEW ==================== -->
+  <div id="backend" class="view active">
+    <header class="header">
+      <div class="header-inner">
+        <div class="logo">⚙️ Custom Order System <span class="badge">Admin</span></div>
+        <div class="header-actions">
+          <button class="btn btn-outline">📄 Documentation</button>
+          <button class="btn btn-primary" onclick="showModal('formModal')">+ New Form</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="backend-layout">
+      <!-- Sidebar: Forms List -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h3>📋 Forms</h3>
+          <button class="btn btn-sm btn-primary" onclick="showModal('formModal')">+</button>
+        </div>
+        <ul class="form-list">
+          <li class="form-item active" data-form="default">
+            <span class="form-dot"></span>Default Form
+            <span class="form-count">4 categories</span>
+          </li>
+          <li class="form-item" data-form="uscd">
+            <span class="form-dot"></span>USCD Form
+            <span class="form-count">3 categories</span>
+          </li>
+          <li class="form-item" data-form="kcd">
+            <span class="form-dot"></span>KCD Form
+            <span class="form-count">5 categories</span>
+          </li>
+          <li class="form-item" data-form="website">
+            <span class="form-dot"></span>Website Form
+            <span class="form-count">2 categories</span>
+          </li>
+        </ul>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Form Header -->
+        <div class="content-header">
+          <div>
+            <h2>Default Form</h2>
+            <p class="text-muted">Manage categories, groups, and fields for this form</p>
+          </div>
+          <div class="content-actions">
+            <button class="btn btn-outline">🔗 Conditional Logic</button>
+            <button class="btn btn-primary" onclick="showModal('categoryModal')">+ Add Category</button>
+          </div>
+        </div>
+
+        <!-- Categories/Tabs -->
+        <div class="category-tabs">
+          <button class="cat-tab active">Range Hoods</button>
+          <button class="cat-tab">Accessories</button>
+          <button class="cat-tab">Installation</button>
+          <button class="cat-tab">Warranty</button>
+          <button class="cat-tab add-tab" onclick="showModal('categoryModal')">+ Add</button>
+        </div>
+
+        <!-- Groups & Fields -->
+        <div class="groups-container">
+          <!-- Group 1 -->
+          <div class="group-card">
+            <div class="group-header">
+              <div class="group-title">
+                <span class="drag-handle">⠿</span>
+                <h4>Hood Specifications</h4>
+                <span class="group-badge">4 fields</span>
+              </div>
+              <div class="group-actions">
+                <button class="btn btn-sm btn-ghost">✏️</button>
+                <button class="btn btn-sm btn-ghost">🗑️</button>
+                <button class="btn btn-sm btn-primary" onclick="showModal('fieldModal')">+ Field</button>
+              </div>
+            </div>
+            <table class="fields-table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Key</th>
+                  <th>Short SKU</th>
+                  <th>Label</th>
+                  <th>Type</th>
+                  <th>Price</th>
+                  <th>Status</th>
+                  <th>Conditions</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="drag-handle-sm">⠿</span></td>
+                  <td><code>hood_style</code></td>
+                  <td><code>HS</code></td>
+                  <td>Hood Style</td>
+                  <td><span class="type-badge select">Select</span></td>
+                  <td>Varies</td>
+                  <td><span class="status-active">Active</span></td>
+                  <td><span class="condition-badge">1 rule</span></td>
+                  <td class="action-cell">
+                    <button class="btn-icon">✏️</button>
+                    <button class="btn-icon">🗑️</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="drag-handle-sm">⠿</span></td>
+                  <td><code>hood_size</code></td>
+                  <td><code>SZ</code></td>
+                  <td>Hood Size</td>
+                  <td><span class="type-badge select">Select</span></td>
+                  <td>Varies</td>
+                  <td><span class="status-active">Active</span></td>
+                  <td><span class="condition-badge">2 rules</span></td>
+                  <td class="action-cell">
+                    <button class="btn-icon">✏️</button>
+                    <button class="btn-icon">🗑️</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="drag-handle-sm">⠿</span></td>
+                  <td><code>hood_color</code></td>
+                  <td><code>CL</code></td>
+                  <td>Hood Color</td>
+                  <td><span class="type-badge select">Select</span></td>
+                  <td>+$150</td>
+                  <td><span class="status-active">Active</span></td>
+                  <td>—</td>
+                  <td class="action-cell">
+                    <button class="btn-icon">✏️</button>
+                    <button class="btn-icon">🗑️</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="drag-handle-sm">⠿</span></td>
+                  <td><code>custom_text</code></td>
+                  <td><code>CT</code></td>
+                  <td>Custom Engraving</td>
+                  <td><span class="type-badge input">Input</span></td>
+                  <td>+$75</td>
+                  <td><span class="status-inactive">Inactive</span></td>
+                  <td>—</td>
+                  <td class="action-cell">
+                    <button class="btn-icon">✏️</button>
+                    <button class="btn-icon">🗑️</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Group 2 -->
+          <div class="group-card">
+            <div class="group-header">
+              <div class="group-title">
+                <span class="drag-handle">⠿</span>
+                <h4>Ventilation Options</h4>
+                <span class="group-badge">3 fields</span>
+              </div>
+              <div class="group-actions">
+                <button class="btn btn-sm btn-ghost">✏️</button>
+                <button class="btn btn-sm btn-ghost">🗑️</button>
+                <button class="btn btn-sm btn-primary" onclick="showModal('fieldModal')">+ Field</button>
+              </div>
+            </div>
+            <table class="fields-table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Key</th>
+                  <th>Short SKU</th>
+                  <th>Label</th>
+                  <th>Type</th>
+                  <th>Price</th>
+                  <th>Status</th>
+                  <th>Conditions</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="drag-handle-sm">⠿</span></td>
+                  <td><code>vent_type</code></td>
+                  <td><code>VT</code></td>
+                  <td>Ventilation Type</td>
+                  <td><span class="type-badge select">Select</span></td>
+                  <td>Varies</td>
+                  <td><span class="status-active">Active</span></td>
+                  <td>—</td>
+                  <td class="action-cell">
+                    <button class="btn-icon">✏️</button>
+                    <button class="btn-icon">🗑️</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="drag-handle-sm">⠿</span></td>
+                  <td><code>duct_cover</code></td>
+                  <td><code>DC</code></td>
+                  <td>Duct Cover</td>
+                  <td><span class="type-badge checkbox">Checkbox</span></td>
+                  <td>+$200</td>
+                  <td><span class="status-active">Active</span></td>
+                  <td><span class="condition-badge">1 rule</span></td>
+                  <td class="action-cell">
+                    <button class="btn-icon">✏️</button>
+                    <button class="btn-icon">🗑️</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="drag-handle-sm">⠿</span></td>
+                  <td><code>cfm_power</code></td>
+                  <td><code>CFM</code></td>
+                  <td>CFM Power Rating</td>
+                  <td><span class="type-badge select">Select</span></td>
+                  <td>Varies</td>
+                  <td><span class="status-active">Active</span></td>
+                  <td>—</td>
+                  <td class="action-cell">
+                    <button class="btn-icon">✏️</button>
+                    <button class="btn-icon">🗑️</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Conditional Logic Panel -->
+          <div class="group-card condition-card">
+            <div class="group-header">
+              <div class="group-title">
+                <h4>🔗 Conditional Logic Rules</h4>
+                <span class="group-badge">3 rules</span>
+              </div>
+              <div class="group-actions">
+                <button class="btn btn-sm btn-primary">+ Add Rule</button>
+              </div>
+            </div>
+            <div class="condition-rules">
+              <div class="rule-item">
+                <div class="rule-if">IF <code>hood_style</code> = <strong>"Wall Mount"</strong></div>
+                <div class="rule-then">THEN Show <code>duct_cover</code> field</div>
+              </div>
+              <div class="rule-item">
+                <div class="rule-if">IF <code>hood_size</code> = <strong>"48 inch"</strong></div>
+                <div class="rule-then">THEN Set <code>cfm_power</code> min to <strong>900 CFM</strong></div>
+              </div>
+              <div class="rule-item">
+                <div class="rule-if">IF <code>hood_style</code> = <strong>"Island"</strong> AND <code>hood_color</code> = <strong>"Custom"</strong></div>
+                <div class="rule-then">THEN Apply <strong>10% discount</strong> on total</div>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-dashed full-width">+ Add New Group</button>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- ==================== FRONTEND VIEW ==================== -->
+  <div id="frontend" class="view">
+    <header class="header frontend-header">
+      <div class="header-inner">
+        <div class="logo">🏠 HoodslyHub <span class="badge badge-blue">Order Portal</span></div>
+        <div class="header-actions">
+          <span class="user-info">👤 John Smith</span>
+          <button class="btn btn-outline">My Orders</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="frontend-layout">
+      <!-- Left: Order Form -->
+      <div class="order-form-area">
+        <div class="form-selector-bar">
+          <label>Select Form:</label>
+          <div class="form-tabs">
+            <button class="form-tab active">Default</button>
+            <button class="form-tab">USCD</button>
+            <button class="form-tab">KCD</button>
+            <button class="form-tab">Website</button>
+          </div>
+        </div>
+
+        <!-- Category Tabs -->
+        <div class="product-tabs">
+          <button class="prod-tab active">🏗️ Range Hoods</button>
+          <button class="prod-tab">🔧 Accessories</button>
+          <button class="prod-tab">📦 Installation</button>
+          <button class="prod-tab">🛡️ Warranty</button>
+        </div>
+
+        <!-- Form Fields -->
+        <div class="order-fields">
+          <div class="field-group-card">
+            <h3 class="field-group-title">Hood Specifications</h3>
+            <div class="field-row">
+              <div class="field-item">
+                <label>Hood Style</label>
+                <select id="hoodStyle" onchange="updatePrice()">
+                  <option value="">— Select Style —</option>
+                  <option value="wall" data-price="1200">Wall Mount — $1,200</option>
+                  <option value="island" data-price="1800">Island — $1,800</option>
+                  <option value="under" data-price="900">Under Cabinet — $900</option>
+                </select>
+              </div>
+              <div class="field-item">
+                <label>Hood Size</label>
+                <select id="hoodSize" onchange="updatePrice()">
+                  <option value="">— Select Size —</option>
+                  <option value="30" data-price="0">30 inch</option>
+                  <option value="36" data-price="100">36 inch (+$100)</option>
+                  <option value="42" data-price="250">42 inch (+$250)</option>
+                  <option value="48" data-price="450">48 inch (+$450)</option>
+                </select>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-item">
+                <label>Hood Color</label>
+                <select id="hoodColor" onchange="updatePrice()">
+                  <option value="">— Select Color —</option>
+                  <option value="stainless" data-price="0">Stainless Steel</option>
+                  <option value="black" data-price="50">Matte Black (+$50)</option>
+                  <option value="white" data-price="50">White (+$50)</option>
+                  <option value="custom" data-price="150">Custom Color (+$150)</option>
+                </select>
+              </div>
+              <div class="field-item" id="engravingField" style="opacity:0.4">
+                <label>Custom Engraving <span class="field-note">(Conditional)</span></label>
+                <input type="text" placeholder="Enter engraving text..." disabled id="engravingInput">
+                <span class="field-price">+$75</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="field-group-card" id="ventSection">
+            <h3 class="field-group-title">Ventilation Options</h3>
+            <div class="field-row">
+              <div class="field-item">
+                <label>Ventilation Type</label>
+                <select id="ventType" onchange="updatePrice()">
+                  <option value="">— Select Type —</option>
+                  <option value="ducted" data-price="0">Ducted</option>
+                  <option value="ductless" data-price="200">Ductless (+$200)</option>
+                  <option value="convertible" data-price="350">Convertible (+$350)</option>
+                </select>
+              </div>
+              <div class="field-item">
+                <label>CFM Power Rating</label>
+                <select id="cfmPower" onchange="updatePrice()">
+                  <option value="">— Select CFM —</option>
+                  <option value="400" data-price="0">400 CFM</option>
+                  <option value="600" data-price="100">600 CFM (+$100)</option>
+                  <option value="900" data-price="250">900 CFM (+$250)</option>
+                  <option value="1200" data-price="450">1200 CFM (+$450)</option>
+                </select>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-item checkbox-field" id="ductCoverField" style="display:none">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="ductCover" onchange="updatePrice()">
+                  <span>Add Duct Cover (+$200)</span>
+                </label>
+                <span class="field-note">Shown when Wall Mount is selected</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="field-group-card">
+            <h3 class="field-group-title">Customer Information</h3>
+            <div class="field-row">
+              <div class="field-item">
+                <label>Customer Name</label>
+                <input type="text" placeholder="Full name">
+              </div>
+              <div class="field-item">
+                <label>Email</label>
+                <input type="email" placeholder="email@example.com">
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-item full-width-field">
+                <label>Shipping Address</label>
+                <textarea placeholder="Enter full shipping address..."></textarea>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-item">
+                <label>Order Notes</label>
+                <textarea placeholder="Any special instructions..." rows="2"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Pricing Sidebar -->
+      <aside class="pricing-sidebar">
+        <div class="pricing-card">
+          <h3 class="pricing-title">💰 Order Summary</h3>
+          <div class="price-lines" id="priceLines">
+            <div class="price-line placeholder-line">
+              <span>Select options to see pricing</span>
+            </div>
+          </div>
+          <div class="price-divider"></div>
+          <div class="discount-section" id="discountSection" style="display:none">
+            <div class="price-line discount-line">
+              <span>🏷️ Discount</span>
+              <span id="discountAmount" class="discount-value">-$0</span>
+            </div>
+            <div class="price-divider"></div>
+          </div>
+          <div class="price-total">
+            <span>Total</span>
+            <span id="totalPrice">$0.00</span>
+          </div>
+          <button class="btn btn-primary full-width btn-lg" onclick="generateInvoice()">📄 Generate Invoice</button>
+          <button class="btn btn-outline full-width" style="margin-top:8px">📧 Send Invoice via Email</button>
+        </div>
+
+        <!-- Invoice Preview -->
+        <div class="invoice-preview" id="invoicePreview" style="display:none">
+          <div class="invoice-card">
+            <div class="invoice-header-bar">
+              <h4>📄 Invoice Preview</h4>
+              <span class="invoice-number">#INV-2026-0042</span>
+            </div>
+            <div class="invoice-body">
+              <p><strong>Customer:</strong> John Smith</p>
+              <p><strong>Date:</strong> Feb 25, 2026</p>
+              <div class="invoice-items" id="invoiceItems"></div>
+              <div class="invoice-total" id="invoiceTotal"></div>
+            </div>
+            <div class="invoice-actions">
+              <button class="btn btn-sm btn-primary">📥 Download PDF</button>
+              <button class="btn btn-sm btn-outline">🖨️ Print</button>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- Modals -->
+  <div class="modal-overlay" id="formModal" onclick="hideModal('formModal')">
+    <div class="modal" onclick="event.stopPropagation()">
+      <h3>Create New Form</h3>
+      <div class="modal-field"><label>Form Name</label><input type="text" placeholder="e.g., USCD Form"></div>
+      <div class="modal-field"><label>Description</label><textarea placeholder="Form description..."></textarea></div>
+      <div class="modal-field"><label>Status</label><select><option>Active</option><option>Draft</option></select></div>
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="hideModal('formModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="hideModal('formModal')">Create Form</button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-overlay" id="categoryModal" onclick="hideModal('categoryModal')">
+    <div class="modal" onclick="event.stopPropagation()">
+      <h3>Add Category / Tab</h3>
+      <div class="modal-field"><label>Category Name</label><input type="text" placeholder="e.g., Range Hoods"></div>
+      <div class="modal-field"><label>Icon</label><input type="text" placeholder="e.g., 🏗️"></div>
+      <div class="modal-field"><label>Sort Order</label><input type="number" value="0"></div>
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="hideModal('categoryModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="hideModal('categoryModal')">Add Category</button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-overlay" id="fieldModal" onclick="hideModal('fieldModal')">
+    <div class="modal modal-wide" onclick="event.stopPropagation()">
+      <h3>Add Field</h3>
+      <div class="modal-grid">
+        <div class="modal-field"><label>Key</label><input type="text" placeholder="e.g., hood_style"></div>
+        <div class="modal-field"><label>Short SKU</label><input type="text" placeholder="e.g., HS"></div>
+        <div class="modal-field"><label>Label</label><input type="text" placeholder="e.g., Hood Style"></div>
+        <div class="modal-field"><label>Field Type</label>
+          <select><option>Select</option><option>Input</option><option>Checkbox</option><option>Radio</option><option>Textarea</option><option>Number</option></select>
+        </div>
+        <div class="modal-field"><label>Price</label><input type="text" placeholder="e.g., 150 or Varies"></div>
+        <div class="modal-field"><label>Status</label><select><option>Active</option><option>Inactive</option></select></div>
+      </div>
+      <div class="modal-field"><label>Options (for Select/Radio)</label><textarea placeholder="One option per line: value|label|price"></textarea></div>
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="hideModal('fieldModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="hideModal('fieldModal')">Add Field</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
