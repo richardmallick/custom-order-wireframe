@@ -28,22 +28,20 @@
     </header>
 
     <div class="backend-layout">
-      <!-- Sidebar: System Config -->
+      <!-- Sidebar: Forms List -->
       <aside class="sidebar">
         <div class="sidebar-header">
-          <h3>⚙️ System Config</h3>
+          <h3>📋 Forms</h3>
+          <button class="btn btn-sm btn-primary" onclick="showModal('formModal')">+</button>
         </div>
         <ul class="form-list">
-          <li class="form-item active" data-view="builder">
-            <span class="form-dot"></span>Master Form Builder
-            <span class="form-count">4 tabs</span>
+          <li class="form-item active" data-form="default">
+            <span class="form-dot"></span>Default Form
+            <span class="form-count">4 categories</span>
           </li>
-          <li class="form-item" data-view="groups">
-            <span class="form-dot" style="background:var(--warning)"></span>Customer Groups
-            <span class="form-count">5 groups</span>
-          </li>
-          <li class="form-item" data-view="settings">
-            <span class="form-dot" style="background:var(--accent)"></span>API Settings
+          <li class="form-item" data-form="oem">
+            <span class="form-dot" style="background:var(--warning)"></span>OEM Form
+            <span class="form-count">3 categories, 4 Wholesalers</span>
           </li>
         </ul>
       </aside>
@@ -53,12 +51,31 @@
         <!-- Form Header -->
         <div class="content-header">
           <div>
-            <h2>Master Order Form</h2>
-            <p class="text-muted">Manage the universal ordering interface, driven by customer groups.</p>
+            <h2 id="backendFormTitle">Default Form</h2>
+            <p class="text-muted" id="backendFormDesc">Manage categories, groups, and fields for this form.</p>
           </div>
           <div class="content-actions">
-            <button class="btn btn-outline">🔗 Group-Based Logic</button>
+            <button class="btn btn-outline">🔗 Form Logic</button>
             <button class="btn btn-primary" onclick="showModal('categoryModal')">+ Add Tab</button>
+          </div>
+        </div>
+        
+        <!-- OEM Wholesaler Selector Backend -->
+        <div class="field-group-card oem-selector" id="backendOemSelector" style="display:none; margin-bottom: 20px;">
+          <h3 class="field-group-title">Configure Wholesaler Pricing & Colors</h3>
+          <div class="field-row">
+            <div class="field-item">
+              <label>Select Wholesaler Configuration</label>
+              <select id="backendOemWholesaler">
+                <option value="uscd">USCD (US Cabinet Depot)</option>
+                <option value="kcd">KCD (Kitchen Cabinet Distributors)</option>
+                <option value="cnc">CNC Cabinetry</option>
+                <option value="j&k">J&K Cabinetry</option>
+              </select>
+            </div>
+            <div class="field-item" style="justify-content: flex-end;">
+              <span class="field-note" style="margin-bottom: 12px; display: block;">The fields and pricing below reflect the specific catalog for the selected wholesaler.</span>
+            </div>
           </div>
         </div>
 

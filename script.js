@@ -16,13 +16,38 @@ function hideModal(id) {
   document.getElementById(id).classList.remove('show');
 }
 
-// ===== BACKEND: Sidebar Config selection =====
+// ===== BACKEND: Sidebar Form selection =====
 document.querySelectorAll('.form-item').forEach(item => {
   item.addEventListener('click', () => {
     document.querySelectorAll('.form-item').forEach(i => i.classList.remove('active'));
     item.classList.add('active');
+    
+    // Switch Backend Form Views
+    const formType = item.dataset.form;
+    const title = document.getElementById('backendFormTitle');
+    const desc = document.getElementById('backendFormDesc');
+    const oemSelector = document.getElementById('backendOemSelector');
+    
+    if (formType === 'oem') {
+      if (title) title.textContent = 'OEM Form';
+      if (desc) desc.textContent = 'Manage categories, groups, and fields for OEM catalogs.';
+      if (oemSelector) oemSelector.style.display = 'block';
+    } else {
+      if (title) title.textContent = 'Default Form';
+      if (desc) desc.textContent = 'Manage categories, groups, and fields for this form.';
+      if (oemSelector) oemSelector.style.display = 'none';
+      const oemSelect = document.getElementById('backendOemWholesaler');
+      if (oemSelect) oemSelect.value = 'uscd';
+    }
   });
 });
+
+const backendWholesaler = document.getElementById('backendOemWholesaler');
+if (backendWholesaler) {
+  backendWholesaler.addEventListener('change', (e) => {
+    alert(`Backend Notice: Now editing colors, SKUs, and pricing fields for ${e.target.options[e.target.selectedIndex].text}...`);
+  });
+}
 
 // ===== BACKEND: Category tab switching =====
 document.querySelectorAll('.cat-tab:not(.add-tab)').forEach(tab => {
