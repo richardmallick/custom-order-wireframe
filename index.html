@@ -28,24 +28,22 @@
     </header>
 
     <div class="backend-layout">
-      <!-- Sidebar: Forms List -->
+      <!-- Sidebar: System Config -->
       <aside class="sidebar">
         <div class="sidebar-header">
-          <h3>📋 Forms</h3>
-          <button class="btn btn-sm btn-primary" onclick="showModal('formModal')">+</button>
+          <h3>⚙️ System Config</h3>
         </div>
         <ul class="form-list">
-          <li class="form-item active" data-form="default">
-            <span class="form-dot"></span>Default Form
-            <span class="form-count">4 categories</span>
+          <li class="form-item active" data-view="builder">
+            <span class="form-dot"></span>Master Form Builder
+            <span class="form-count">4 tabs</span>
           </li>
-          <li class="form-item" data-form="oem">
-            <span class="form-dot"></span>OEM Form
-            <span class="form-count">3 categories</span>
+          <li class="form-item" data-view="groups">
+            <span class="form-dot" style="background:var(--warning)"></span>Customer Groups
+            <span class="form-count">5 groups</span>
           </li>
-          <li class="form-item" data-form="website">
-            <span class="form-dot"></span>Website Form
-            <span class="form-count">2 categories</span>
+          <li class="form-item" data-view="settings">
+            <span class="form-dot" style="background:var(--accent)"></span>API Settings
           </li>
         </ul>
       </aside>
@@ -55,12 +53,12 @@
         <!-- Form Header -->
         <div class="content-header">
           <div>
-            <h2>Default Form</h2>
-            <p class="text-muted">Manage categories, groups, and fields for this form</p>
+            <h2>Master Order Form</h2>
+            <p class="text-muted">Manage the universal ordering interface, driven by customer groups.</p>
           </div>
           <div class="content-actions">
-            <button class="btn btn-outline">🔗 Conditional Logic</button>
-            <button class="btn btn-primary" onclick="showModal('categoryModal')">+ Add Category</button>
+            <button class="btn btn-outline">🔗 Group-Based Logic</button>
+            <button class="btn btn-primary" onclick="showModal('categoryModal')">+ Add Tab</button>
           </div>
         </div>
 
@@ -252,16 +250,16 @@
             </div>
             <div class="condition-rules">
               <div class="rule-item">
+                <div class="rule-if">IF Customer Group = <strong>"OEM (USCD/KCD)"</strong></div>
+                <div class="rule-then">THEN Only show restricted <strong>Master SKUs</strong> and apply <strong>30% discount</strong></div>
+              </div>
+              <div class="rule-item">
                 <div class="rule-if">IF <code>hood_style</code> = <strong>"Wall Mount"</strong></div>
                 <div class="rule-then">THEN Show <code>duct_cover</code> field</div>
               </div>
               <div class="rule-item">
                 <div class="rule-if">IF <code>hood_size</code> = <strong>"48 inch"</strong></div>
                 <div class="rule-then">THEN Set <code>cfm_power</code> min to <strong>900 CFM</strong></div>
-              </div>
-              <div class="rule-item">
-                <div class="rule-if">IF <code>hood_style</code> = <strong>"Island"</strong> AND <code>hood_color</code> = <strong>"Custom"</strong></div>
-                <div class="rule-then">THEN Apply <strong>10% discount</strong> on total</div>
               </div>
             </div>
           </div>
@@ -287,31 +285,30 @@
     <div class="frontend-layout">
       <!-- Left: Order Form -->
       <div class="order-form-area">
-        <div class="form-selector-bar">
-          <label>Select Form:</label>
-          <div class="form-tabs">
-            <button class="form-tab active" data-form="default">Default</button>
-            <button class="form-tab" data-form="oem">OEM</button>
-            <button class="form-tab" data-form="website">Website</button>
+        <!-- Customer Lookup Bar (Moved to top as primary driver) -->
+        <div class="form-selector-bar" style="flex-direction: column; align-items: stretch; gap: 12px; background: var(--bg4); border-color: var(--primary-glow);">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <label style="color: #fff; font-weight: 600;">👤 Link to Customer Account</label>
+            <span class="badge" style="background: var(--warning); color: #000;">Loads specific pricing & catalog</span>
           </div>
-        </div>
-
-        <!-- OEM Wholesaler Selector (Hidden by default) -->
-        <div class="field-group-card oem-selector" id="oemSelector" style="display:none; margin-bottom: 20px;">
-          <h3 class="field-group-title">OEM Configuration</h3>
-          <div class="field-row">
-            <div class="field-item">
-              <label>Select Wholesaler</label>
-              <select id="oemWholesaler">
-                <option value="">— Select Wholesaler —</option>
-                <option value="uscd">USCD (US Cabinet Depot)</option>
-                <option value="kcd">KCD (Kitchen Cabinet Distributors)</option>
-                <option value="cnc">CNC Cabinetry</option>
-                <option value="j&k">J&K Cabinetry</option>
-              </select>
-            </div>
-            <div class="field-item" style="justify-content: flex-end;">
-              <span class="field-note" style="margin-bottom: 12px; display: block;">Loads OEM-specific SKUs, pricing, and color options.</span>
+          <div style="display: flex; gap: 10px;">
+            <input type="text" id="masterCustomerSearch" placeholder="Enter customer email (e.g. kcd@example.com or wholesale@example.com)..." style="flex: 1; padding: 10px 14px; background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; color: var(--text);">
+            <button class="btn btn-primary" onclick="lookupCustomer()" type="button">🔍 Load Details</button>
+            <button class="btn btn-outline" onclick="clearCustomer()" type="button">Reset</button>
+          </div>
+          
+          <!-- Master Customer Details (Auto-filled) -->
+          <div class="customer-details-panel" id="customerDetailsPanel" style="display: none; background: var(--bg2); padding: 16px; border-radius: 8px; border: 1px solid var(--border); margin-top: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: start;">
+              <div>
+                <h4 id="custNameDisplay" style="margin-bottom: 4px; color: var(--text);">Jane Builder</h4>
+                <p id="custEmailDisplay" style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 8px;">wholesale@example.com</p>
+                <span class="badge badge-blue" id="custGroupDisplay">Wholesale 20</span>
+              </div>
+              <div style="text-align: right;">
+                <span class="status-active" id="custTermsDisplay" style="display: block; margin-bottom: 4px;">Net 15 Approved</span>
+                <span style="font-size: 0.8em; color: var(--text-muted); display: block;" id="custAddressDisplay">789 Builder Ln</span>
+              </div>
             </div>
           </div>
         </div>
@@ -405,31 +402,7 @@
           <div class="field-group-card">
             <h3 class="field-group-title">Customer Information & Invoicing</h3>
             
-            <!-- Customer Lookup -->
-            <div class="field-row">
-              <div class="field-item full-width-field">
-                <label>Customer Lookup (Email or Name)</label>
-                <div style="display: flex; gap: 10px;">
-                  <input type="text" id="customerSearch" placeholder="Search customer email..." style="flex: 1;">
-                  <button class="btn btn-outline" onclick="lookupCustomer()" type="button">🔍 Lookup</button>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Customer Details (Auto-filled) -->
-            <div class="customer-details-panel" id="customerDetailsPanel" style="display: none; background: var(--bg4); padding: 16px; border-radius: 8px; margin-bottom: 14px; border: 1px solid var(--primary-glow);">
-              <div style="display: flex; justify-content: space-between; align-items: start;">
-                <div>
-                  <h4 id="custNameDisplay" style="margin-bottom: 4px; color: var(--text);">John Doe</h4>
-                  <p id="custEmailDisplay" style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 8px;">john@example.com</p>
-                  <span class="badge badge-blue" id="custGroupDisplay">Wholesale 20</span>
-                </div>
-                <div style="text-align: right;">
-                  <span class="status-active" id="custTermsDisplay" style="display: block; margin-bottom: 4px;">Net 30 Approved</span>
-                  <button class="btn btn-sm btn-ghost" onclick="clearCustomer()">Clear</button>
-                </div>
-              </div>
-            </div>
+            <p class="field-note" style="margin-bottom: 16px;">* Details are auto-filled from the Linked Account above.</p>
 
             <div class="field-row">
               <div class="field-item">

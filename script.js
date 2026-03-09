@@ -16,7 +16,7 @@ function hideModal(id) {
   document.getElementById(id).classList.remove('show');
 }
 
-// ===== BACKEND: Sidebar form selection =====
+// ===== BACKEND: Sidebar Config selection =====
 document.querySelectorAll('.form-item').forEach(item => {
   item.addEventListener('click', () => {
     document.querySelectorAll('.form-item').forEach(i => i.classList.remove('active'));
@@ -32,39 +32,18 @@ document.querySelectorAll('.cat-tab:not(.add-tab)').forEach(tab => {
   });
 });
 
-// ===== FRONTEND: Form tab switching =====
-document.querySelectorAll('.form-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.form-tab').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    
-    // Show/hide OEM selector
-    const oemSelector = document.getElementById('oemSelector');
-    if (tab.dataset.form === 'oem') {
-      oemSelector.style.display = 'block';
-    } else {
-      oemSelector.style.display = 'none';
-      document.getElementById('oemWholesaler').value = '';
-    }
-    updatePrice();
-  });
-});
-
-// OEM Wholesaler Change
-document.getElementById('oemWholesaler').addEventListener('change', updatePrice);
-
-// ===== CUSTOMER LOOKUP =====
+// ===== CUSTOMER LOOKUP (Master Frontend Control) =====
 const mockCustomers = {
-  'kcd@example.com': { name: 'KCD Purchasing', email: 'kcd@example.com', group: 'OEM Partner', discount: 30, terms: 'net30', addr: '123 KCD Blvd' },
-  'uscd@example.com': { name: 'USCD Orders', email: 'uscd@example.com', group: 'OEM Partner', discount: 30, terms: 'net30', addr: '456 USCD Way' },
-  'wholesale@example.com': { name: 'Jane Builder', email: 'wholesale@example.com', group: 'Wholesale 20', discount: 20, terms: 'net15', addr: '789 Builder Ln' }
+  'kcd@example.com': { name: 'KCD Purchasing', email: 'kcd@example.com', group: 'OEM (USCD/KCD)', discount: 30, terms: 'net30', addr: '123 KCD Blvd', wholesaler: 'kcd' },
+  'uscd@example.com': { name: 'USCD Orders', email: 'uscd@example.com', group: 'OEM (USCD/KCD)', discount: 30, terms: 'net30', addr: '456 USCD Way', wholesaler: 'uscd' },
+  'wholesale@example.com': { name: 'Jane Builder', email: 'wholesale@example.com', group: 'Wholesale 20', discount: 20, terms: 'net15', addr: '789 Builder Ln', wholesaler: null }
 };
 
 let currentCustomerGroup = null;
 let currentCustomerDiscount = 0;
 
 function lookupCustomer() {
-  const search = document.getElementById('customerSearch').value.toLowerCase();
+  const search = document.getElementById('masterCustomerSearch').value.toLowerCase();
   const customer = mockCustomers[search];
   
   const detailsPanel = document.getElementById('customerDetailsPanel');
@@ -73,6 +52,7 @@ function lookupCustomer() {
     document.getElementById('custNameDisplay').textContent = customer.name;
     document.getElementById('custEmailDisplay').textContent = customer.email;
     document.getElementById('custGroupDisplay').textContent = customer.group;
+    document.getElementById('custAddressDisplay').textContent = customer.addr;
     
     const termsMap = { 'due_receipt': 'Due on Receipt', 'net15': 'Net 15 Approved', 'net30': 'Net 30 Approved' };
     document.getElementById('custTermsDisplay').textContent = termsMap[customer.terms];
@@ -86,15 +66,21 @@ function lookupCustomer() {
     currentCustomerGroup = customer.group;
     currentCustomerDiscount = customer.discount;
     
+    // Load specific layout/logic based on group
+    // In a real app, this would query Magento API and update the DOM
+    if (customer.group.includes('OEM')) {
+      alert(`System Notice: Loaded OEM configuration for ${customer.wholesaler.toUpperCase()}. Restricted SKUs and pricing applied.`);
+    }
+
     detailsPanel.style.display = 'block';
     updatePrice();
   } else {
-    alert('Customer not found. Try: kcd@example.com or wholesale@example.com');
+    alert('Customer not found in DB. Try: kcd@example.com or wholesale@example.com');
   }
 }
 
 function clearCustomer() {
-  document.getElementById('customerSearch').value = '';
+  document.getElementById('masterCustomerSearch').value = '';
   document.getElementById('customerDetailsPanel').style.display = 'none';
   document.getElementById('custName').value = '';
   document.getElementById('custEmail').value = '';
