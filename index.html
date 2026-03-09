@@ -39,13 +39,9 @@
             <span class="form-dot"></span>Default Form
             <span class="form-count">4 categories</span>
           </li>
-          <li class="form-item" data-form="uscd">
-            <span class="form-dot"></span>USCD Form
+          <li class="form-item" data-form="oem">
+            <span class="form-dot"></span>OEM Form
             <span class="form-count">3 categories</span>
-          </li>
-          <li class="form-item" data-form="kcd">
-            <span class="form-dot"></span>KCD Form
-            <span class="form-count">5 categories</span>
           </li>
           <li class="form-item" data-form="website">
             <span class="form-dot"></span>Website Form
@@ -294,10 +290,29 @@
         <div class="form-selector-bar">
           <label>Select Form:</label>
           <div class="form-tabs">
-            <button class="form-tab active">Default</button>
-            <button class="form-tab">USCD</button>
-            <button class="form-tab">KCD</button>
-            <button class="form-tab">Website</button>
+            <button class="form-tab active" data-form="default">Default</button>
+            <button class="form-tab" data-form="oem">OEM</button>
+            <button class="form-tab" data-form="website">Website</button>
+          </div>
+        </div>
+
+        <!-- OEM Wholesaler Selector (Hidden by default) -->
+        <div class="field-group-card oem-selector" id="oemSelector" style="display:none; margin-bottom: 20px;">
+          <h3 class="field-group-title">OEM Configuration</h3>
+          <div class="field-row">
+            <div class="field-item">
+              <label>Select Wholesaler</label>
+              <select id="oemWholesaler">
+                <option value="">— Select Wholesaler —</option>
+                <option value="uscd">USCD (US Cabinet Depot)</option>
+                <option value="kcd">KCD (Kitchen Cabinet Distributors)</option>
+                <option value="cnc">CNC Cabinetry</option>
+                <option value="j&k">J&K Cabinetry</option>
+              </select>
+            </div>
+            <div class="field-item" style="justify-content: flex-end;">
+              <span class="field-note" style="margin-bottom: 12px; display: block;">Loads OEM-specific SKUs, pricing, and color options.</span>
+            </div>
           </div>
         </div>
 
@@ -388,21 +403,48 @@
           </div>
 
           <div class="field-group-card">
-            <h3 class="field-group-title">Customer Information</h3>
+            <h3 class="field-group-title">Customer Information & Invoicing</h3>
+            
+            <!-- Customer Lookup -->
+            <div class="field-row">
+              <div class="field-item full-width-field">
+                <label>Customer Lookup (Email or Name)</label>
+                <div style="display: flex; gap: 10px;">
+                  <input type="text" id="customerSearch" placeholder="Search customer email..." style="flex: 1;">
+                  <button class="btn btn-outline" onclick="lookupCustomer()" type="button">🔍 Lookup</button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Customer Details (Auto-filled) -->
+            <div class="customer-details-panel" id="customerDetailsPanel" style="display: none; background: var(--bg4); padding: 16px; border-radius: 8px; margin-bottom: 14px; border: 1px solid var(--primary-glow);">
+              <div style="display: flex; justify-content: space-between; align-items: start;">
+                <div>
+                  <h4 id="custNameDisplay" style="margin-bottom: 4px; color: var(--text);">John Doe</h4>
+                  <p id="custEmailDisplay" style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 8px;">john@example.com</p>
+                  <span class="badge badge-blue" id="custGroupDisplay">Wholesale 20</span>
+                </div>
+                <div style="text-align: right;">
+                  <span class="status-active" id="custTermsDisplay" style="display: block; margin-bottom: 4px;">Net 30 Approved</span>
+                  <button class="btn btn-sm btn-ghost" onclick="clearCustomer()">Clear</button>
+                </div>
+              </div>
+            </div>
+
             <div class="field-row">
               <div class="field-item">
                 <label>Customer Name</label>
-                <input type="text" placeholder="Full name">
+                <input type="text" id="custName" placeholder="Full name">
               </div>
               <div class="field-item">
                 <label>Email</label>
-                <input type="email" placeholder="email@example.com">
+                <input type="email" id="custEmail" placeholder="email@example.com">
               </div>
             </div>
             <div class="field-row">
               <div class="field-item full-width-field">
                 <label>Shipping Address</label>
-                <textarea placeholder="Enter full shipping address..."></textarea>
+                <textarea id="custAddress" placeholder="Enter full shipping address..."></textarea>
               </div>
             </div>
             <div class="field-row">
@@ -436,8 +478,23 @@
             <span>Total</span>
             <span id="totalPrice">$0.00</span>
           </div>
-          <button class="btn btn-primary full-width btn-lg" onclick="generateInvoice()">📄 Generate Invoice</button>
-          <button class="btn btn-outline full-width" style="margin-top:8px">📧 Send Invoice via Email</button>
+          
+          <div class="payment-terms-section" style="margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; padding: 10px; background: var(--bg3); border-radius: 8px;">
+            <span style="font-size: 0.85em; color: var(--text-muted);">Payment Terms</span>
+            <select id="paymentTerms" style="background: var(--bg2); border: 1px solid var(--border); color: var(--text); padding: 4px 8px; border-radius: 4px; font-size: 0.85em;">
+              <option value="due_receipt">Due on Receipt</option>
+              <option value="net15">Net 15</option>
+              <option value="net30">Net 30</option>
+            </select>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <button class="btn btn-primary full-width btn-lg" onclick="generateInvoice()">📄 Generate Invoice</button>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn btn-outline" style="flex: 1;">📧 Email</button>
+              <button class="btn btn-outline" style="flex: 1;">📋 Create Quote</button>
+            </div>
+          </div>
         </div>
 
         <!-- Invoice Preview -->

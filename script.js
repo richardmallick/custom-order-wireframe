@@ -37,8 +37,74 @@ document.querySelectorAll('.form-tab').forEach(tab => {
   tab.addEventListener('click', () => {
     document.querySelectorAll('.form-tab').forEach(t => t.classList.remove('active'));
     tab.classList.add('active');
+    
+    // Show/hide OEM selector
+    const oemSelector = document.getElementById('oemSelector');
+    if (tab.dataset.form === 'oem') {
+      oemSelector.style.display = 'block';
+    } else {
+      oemSelector.style.display = 'none';
+      document.getElementById('oemWholesaler').value = '';
+    }
+    updatePrice();
   });
 });
+
+// OEM Wholesaler Change
+document.getElementById('oemWholesaler').addEventListener('change', updatePrice);
+
+// ===== CUSTOMER LOOKUP =====
+const mockCustomers = {
+  'kcd@example.com': { name: 'KCD Purchasing', email: 'kcd@example.com', group: 'OEM Partner', discount: 30, terms: 'net30', addr: '123 KCD Blvd' },
+  'uscd@example.com': { name: 'USCD Orders', email: 'uscd@example.com', group: 'OEM Partner', discount: 30, terms: 'net30', addr: '456 USCD Way' },
+  'wholesale@example.com': { name: 'Jane Builder', email: 'wholesale@example.com', group: 'Wholesale 20', discount: 20, terms: 'net15', addr: '789 Builder Ln' }
+};
+
+let currentCustomerGroup = null;
+let currentCustomerDiscount = 0;
+
+function lookupCustomer() {
+  const search = document.getElementById('customerSearch').value.toLowerCase();
+  const customer = mockCustomers[search];
+  
+  const detailsPanel = document.getElementById('customerDetailsPanel');
+  
+  if (customer) {
+    document.getElementById('custNameDisplay').textContent = customer.name;
+    document.getElementById('custEmailDisplay').textContent = customer.email;
+    document.getElementById('custGroupDisplay').textContent = customer.group;
+    
+    const termsMap = { 'due_receipt': 'Due on Receipt', 'net15': 'Net 15 Approved', 'net30': 'Net 30 Approved' };
+    document.getElementById('custTermsDisplay').textContent = termsMap[customer.terms];
+    
+    // Auto-fill form fields
+    document.getElementById('custName').value = customer.name;
+    document.getElementById('custEmail').value = customer.email;
+    document.getElementById('custAddress').value = customer.addr;
+    document.getElementById('paymentTerms').value = customer.terms;
+    
+    currentCustomerGroup = customer.group;
+    currentCustomerDiscount = customer.discount;
+    
+    detailsPanel.style.display = 'block';
+    updatePrice();
+  } else {
+    alert('Customer not found. Try: kcd@example.com or wholesale@example.com');
+  }
+}
+
+function clearCustomer() {
+  document.getElementById('customerSearch').value = '';
+  document.getElementById('customerDetailsPanel').style.display = 'none';
+  document.getElementById('custName').value = '';
+  document.getElementById('custEmail').value = '';
+  document.getElementById('custAddress').value = '';
+  document.getElementById('paymentTerms').value = 'due_receipt';
+  
+  currentCustomerGroup = null;
+  currentCustomerDiscount = 0;
+  updatePrice();
+}
 
 // ===== FRONTEND: Product tab switching =====
 document.querySelectorAll('.prod-tab').forEach(tab => {
@@ -135,7 +201,12 @@ function updatePrice() {
 
   // Conditional discount: Island + Custom Color = 10% off
   if (style.value === 'island' && color.value === 'custom') {
-    discountPercent = 10;
+    discountPercent = Math.max(discountPercent, 10);
+  }
+  
+  // Apply Group Discount if available
+  if (currentCustomerDiscount > 0) {
+    discountPercent = Math.max(discountPercent, currentCustomerDiscount);
   }
 
   // Render price lines
@@ -154,7 +225,15 @@ function updatePrice() {
   if (discountPercent > 0 && subtotal > 0) {
     discountAmt = Math.round(subtotal * discountPercent / 100);
     discountSection.style.display = 'block';
-    document.getElementById('discountAmount').textContent = `-$${discountAmt.toLocaleString()} (${discountPercent}%)`;
+    
+    let discountLabel = currentCustomerGroup ? `🏷️ ${currentCustomerGroup} Discount` : '🏷️ Discount';
+    document.getElementById('discountSection').innerHTML = `
+      <div class="price-line discount-line">
+        <span>${discountLabel}</span>
+        <span id="discountAmount" class="discount-value">-$${discountAmt.toLocaleString()} (${discountPercent}%)</span>
+      </div>
+      <div class="price-divider"></div>
+    `;
   } else {
     discountSection.style.display = 'none';
   }
@@ -170,13 +249,40 @@ function generateInvoice() {
   preview.style.display = 'block';
 
   const priceLines = document.getElementById('priceLines').innerHTML;
-  document.getElementById('invoiceItems').innerHTML = priceLines
+  let itemsHtml = priceLines
     .replace(/price-line/g, 'inv-line')
     .replace(/price-val/g, '');
+    
+  // Add discount line to invoice if applicable
+  const discountSection = document.getElementById('discountSection');
+  if (discountSection.style.display !== 'none') {
+    const discountLine = discountSection.querySelector('.discount-line').innerHTML;
+    itemsHtml += `<div class="inv-line discount-line" style="margin-top: 8px;">${discountLine}</div>`;
+  }
+  
+  document.getElementById('invoiceItems').innerHTML = itemsHtml;
 
   const total = document.getElementById('totalPrice').textContent;
+  const terms = document.getElementById('paymentTerms');
+  const termsText = terms.options[terms.selectedIndex].text;
+  
   document.getElementById('invoiceTotal').innerHTML =
     `<span>Total</span><span>${total}</span>`;
+    
+  // Add terms below total
+  const invoiceBody = document.querySelector('.invoice-body');
+  
+  const customerName = document.getElementById('custName').value || 'John Smith';
+  const email = document.getElementById('custEmail').value || '';
+  
+  invoiceBody.innerHTML = `
+    <p><strong>Customer:</strong> ${customerName}</p>
+    ${email ? `<p><strong>Email:</strong> ${email}</p>` : ''}
+    <p><strong>Date:</strong> Feb 25, 2026</p>
+    <p><strong>Terms:</strong> ${termsText}</p>
+    <div class="invoice-items" id="invoiceItems">${itemsHtml}</div>
+    <div class="invoice-total" id="invoiceTotal"><span>Total</span><span>${total}</span></div>
+  `;
 
   preview.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
